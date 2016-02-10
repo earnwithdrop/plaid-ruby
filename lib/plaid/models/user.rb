@@ -138,7 +138,7 @@ module Plaid
     def update_credentials(username, pass, pin = nil)
       payload = { username: username, password: pass, access_token: self.access_token }
       payload.merge!(pin: pin) if pin
-      update(Plaid.patch(permissions.last, payload))
+      update(Connection.patch(permissions.last, payload))
     end
 
     # API: semi-private
