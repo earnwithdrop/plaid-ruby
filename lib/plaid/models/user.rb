@@ -18,10 +18,14 @@ module Plaid
 
     # API: public
     # Use this method to send back the MFA code or answer
-    def mfa_authentication(auth, type = nil)
+    def mfa_authentication(auth, type = nil, update = false)
       type = self.type if type.nil?
-      auth_path = self.permissions.last + '/step'
-      res = Connection.post(auth_path, { mfa: auth, access_token: self.access_token, type: type })
+      auth_path = permissions.last + '/step'
+      res = if update
+              Connection.patch(auth_path, mfa: auth, access_token: access_token, type: type)
+            else
+              Connection.post(auth_path, mfa: auth, access_token: access_token, type: type)
+            end
       self.accounts = []
       self.transactions = []
       update(res)
@@ -51,7 +55,7 @@ module Plaid
     # API: public
     # Use this method to delete a user from the Plaid API
     def delete_user
-      Connection.delete('info', { access_token: self.access_token })
+      Connection.delete(permissions.last, { access_token: self.access_token })
     end
 
     ### Internal build methods
@@ -131,12 +135,10 @@ module Plaid
     # API: semi-private
     # Helper method to update user information
     # Requires 'info' api level
-    def update_info(username,pass,pin=nil)
-      return false unless self.permit? 'info'
-
+    def update_credentials(username, pass, pin = nil)
       payload = { username: username, password: pass, access_token: self.access_token }
       payload.merge!(pin: pin) if pin
-      update(Plaid.patch('info', payload))
+      update(Plaid.patch(permissions.last, payload))
     end
 
     # API: semi-private
