@@ -9,11 +9,15 @@ module Plaid
 
     # API: public
     # Use this method to select the MFA method
-    def select_mfa_method(selection, type=nil)
+    def select_mfa_method(selection, type = nil, update = false)
       type = self.type if type.nil?
-      auth_path = self.permissions.last + '/step'
-      res = Connection.post(auth_path, { options: { send_method: selection }.to_json, access_token: self.access_token, type: type })
-      update(res, self.permissions.last)
+      auth_path = permissions.last + '/step'
+      res = if update
+              Connection.patch(auth_path, { options: { send_method: selection }.to_json, access_token: self.access_token, type: type })
+            else
+              Connection.post(auth_path, { options: { send_method: selection }.to_json, access_token: self.access_token, type: type })
+            end
+      update(res, permissions.last)
     end
 
     # API: public
