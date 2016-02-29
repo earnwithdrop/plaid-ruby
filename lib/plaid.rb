@@ -98,7 +98,6 @@ module Plaid
                 end
       options[:p] = product if product
       res = Connection.get('institutions/search', nil, **options)
-      puts res
       id.nil? ? Institution.all(res) : Institution.new(res)
     end
 
