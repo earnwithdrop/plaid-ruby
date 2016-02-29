@@ -90,6 +90,18 @@ module Plaid
       id.nil? ? Institution.all(res) : Institution.new(res)
     end
 
+    def search(id: nil, query: nil, product: nil)
+      options = if id
+                  { id: id }
+                else
+                  { q: query }
+                end
+      options[:p] = product if product
+      res = Connection.get('institutions/search', nil, **options)
+      puts res
+      id.nil? ? Institution.all(res) : Institution.new(res)
+    end
+
     # API: public
     # Builds an category object and returns when the category details exist
     def category(id = nil)

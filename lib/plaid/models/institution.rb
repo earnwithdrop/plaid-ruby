@@ -1,6 +1,6 @@
 module Plaid
   class Institution
-    attr_accessor :id, :name, :type, :has_mfa, :mfa, :credentials, :products
+    attr_accessor :id, :name, :type, :has_mfa, :mfa, :credentials, :products, :url
 
     def initialize(fields = {})
       @id = fields['id']
@@ -10,6 +10,9 @@ module Plaid
       @mfa = fields['mfa']
       @credentials = fields['credentials']
       @products = fields['products']
+      @url = fields['url']
+      @fields = fields['fields']
+      @colors = fields['colors']
     end
 
     # API: semi-private

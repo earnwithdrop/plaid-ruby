@@ -18,12 +18,11 @@ module Plaid
       end
 
       # API: semi-private
-      def get(path, id = nil)
-        uri = build_uri(path,id)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        request = Net::HTTP::Get.new(uri.path)
-        res = http.request(request)
+      def get(path, id = nil, **options)
+        uri = build_uri(path, id)
+        uri.query = URI.encode_www_form(options) if options
+        request = Net::HTTP::Get.new(uri)
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(request) }
         parse_get_response(res.body)
       end
 
