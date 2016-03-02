@@ -139,9 +139,10 @@ module Plaid
     # API: semi-private
     # Helper method to update user information
     # Requires 'info' api level
-    def update_credentials(username, pass, pin = nil)
+    def update_credentials(username, pass, pin = nil, options = nil)
       payload = { username: username, password: pass, access_token: self.access_token }
       payload.merge!(pin: pin) if pin
+      payload[:options] = options.is_a?(Hash) ? JSON.generate(options) : options if options
       update(Connection.patch(permissions.last, payload))
     end
 
