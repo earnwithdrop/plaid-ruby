@@ -90,6 +90,18 @@ module Plaid
       id.nil? ? Institution.all(res) : Institution.new(res)
     end
 
+    def long_tail_institutions(count: 50, offset: 0)
+      res = Connection.post(
+        'institutions/longtail',
+        offset: offset,
+        count: count
+      )
+      {
+        count: res['total_count'],
+        institutions: Institution.all(res['results'])
+      }
+    end
+
     def search(id: nil, query: nil, product: nil)
       options = if id
                   { id: id }
