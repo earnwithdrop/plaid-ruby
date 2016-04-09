@@ -11,6 +11,7 @@ module Plaid
         options.merge!(client_id: Plaid.customer_id, secret: Plaid.secret)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
+        http.read_timeout = 120
         request = Net::HTTP::Post.new(uri.path)
         request.set_form_data(options)
         res = http.request(request)
@@ -22,7 +23,7 @@ module Plaid
         uri = build_uri(path, id)
         uri.query = URI.encode_www_form(options) if options
         request = Net::HTTP::Get.new(uri)
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(request) }
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 120) { |http| http.request(request) }
         parse_get_response(res.body)
       end
 
@@ -33,7 +34,7 @@ module Plaid
         req = Net::HTTP::Get.new(uri.path)
         req.body = URI.encode_www_form(options) if options
         req.content_type = 'application/x-www-form-urlencoded'
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 120) { |http| http.request(req) }
         parse_response(res)
       end
 
@@ -44,7 +45,7 @@ module Plaid
         req = Net::HTTP::Patch.new(uri.path)
         req.body = URI.encode_www_form(options) if options
         req.content_type = 'application/x-www-form-urlencoded'
-        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
+        res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 120) { |http| http.request(req) }
         parse_response(res)
       end
 
@@ -55,7 +56,7 @@ module Plaid
         req = Net::HTTP::Delete.new(uri.path)
         req.body = URI.encode_www_form(options) if options
         req.content_type = 'application/x-www-form-urlencoded'
-        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) { |http| http.request(req) }
+        Net::HTTP.start(uri.hostname, uri.port, use_ssl: true, read_timeout: 120) { |http| http.request(req) }
       end
 
       protected
