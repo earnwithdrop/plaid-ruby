@@ -85,10 +85,13 @@ module Plaid
 
     # API: public
     # Builds an institution object and returns when the institution details exist
-    def institution(id = nil)
+    def institution(id = nil, count: 50, offset: 0)
       if id.nil?
-        res = Connection.get('institutions/all')
-        Institution.all(res)
+        res = Connection.post('institutions/all', count: count, offset: offset)
+        {
+          institutions: Institution.all(res['results']),
+          count: res['total_count']
+        }
       else
         res = Connection.get('institutions', id)
         Institution.new(res)
