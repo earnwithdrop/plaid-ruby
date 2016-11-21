@@ -86,8 +86,13 @@ module Plaid
     # API: public
     # Builds an institution object and returns when the institution details exist
     def institution(id = nil)
-      res = Connection.get('institutions', id)
-      id.nil? ? Institution.all(res) : Institution.new(res)
+      if id.nil?
+        res = Connection.get('institutions/all')
+        Institution.all(res)
+      else
+        res = Connection.get('institutions', id)
+        Institution.new(res)
+      end
     end
 
     def long_tail_institutions(count: 50, offset: 0)
@@ -109,7 +114,7 @@ module Plaid
                   { q: query }
                 end
       options[:p] = product if product
-      res = Connection.get('institutions/search', nil, **options)
+      res = Connection.get('institutions/all/search', nil, **options)
       return res if res.is_a?(Array) && res.empty?
       id.nil? ? Institution.all(res) : Institution.new(res)
     end
