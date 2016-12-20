@@ -2,11 +2,13 @@ module Plaid
   class PlaidError < StandardError
     attr_reader :code
     attr_reader :resolve
-    
-    def initialize(code, message, resolve)
+    attr_reader :request_id
+
+    def initialize(code, message, resolve, request_id)
       super(message)
       @code = code
       @resolve = resolve
+      @request_id = request_id
     end
   end
 

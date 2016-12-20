@@ -71,22 +71,22 @@ module Plaid
 
       def parse_response(res)
         # unfortunately, the JSON gem will raise an exception if the response is empty
-        raise Plaid::ServerError.new(res.code, res.msg, '') if res.body.to_s.length < 2
+        raise Plaid::ServerError.new(res.code, res.msg, '', res['X-Request-Id']) if res.body.to_s.length < 2
         # we got a response from the server, so parse it
         body = JSON.parse(res.body)
         case res.code.delete('.').to_i
         when 200 then body
         when 201 then { msg: 'Requires further authentication', body: body}
         when 400
-          raise Plaid::BadRequest.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::BadRequest.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 401
-          raise Plaid::Unauthorized.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::Unauthorized.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 402
-          raise Plaid::RequestFailed.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::RequestFailed.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 404
-          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         else
-          raise Plaid::ServerError.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::ServerError.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         end
       end
 
@@ -98,7 +98,7 @@ module Plaid
         when nil
           body
         when 1301, 1401, 1501, 1601
-          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'])
+          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         else
           body
         end
