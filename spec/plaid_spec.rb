@@ -1,6 +1,6 @@
-# Authentication flow specs - returns Plaid::User
+# Authentication flow specs - returns OldPlaid::User
 
-describe Plaid do
+describe OldPlaid do
   let(:api_level) { raise "Define let(:api_level)" }
   let(:username)  { raise "Define let(:username)" }
   let(:password)  { raise "Define let(:password)" }
@@ -9,7 +9,7 @@ describe Plaid do
   let(:options)   { nil }
 
   describe '.add_user' do
-    let(:user) { Plaid.add_user api_level, username, password, type, pin, options }
+    let(:user) { OldPlaid.add_user api_level, username, password, type, pin, options }
 
     context 'with correct credentials for single user auth' do
       let(:username)  { 'plaid_test' }
@@ -30,7 +30,7 @@ describe Plaid do
           let(:password) { 'plaid_locked' }
 
           it 'raises a locked error' do
-            expect { user }.to raise_error(Plaid::RequestFailed) { |error|
+            expect { user }.to raise_error(OldPlaid::RequestFailed) { |error|
               expect(error.code).to eq(1205)
             }
           end
@@ -89,12 +89,12 @@ describe Plaid do
 
         context 'using incorrect password' do
           let(:password) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
 
         context 'using incorrect username' do
           let(:username) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
       end
 
@@ -103,12 +103,12 @@ describe Plaid do
 
         context 'using incorrect password' do
           let(:password) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
 
         context 'using incorrect username' do
           let(:username) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
       end
 
@@ -117,12 +117,12 @@ describe Plaid do
 
         context 'using incorrect password' do
           let(:password) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
 
         context 'using incorrect username' do
           let(:username) { 'plaid_bad' }
-          it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid credentials') }
+          it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid credentials') }
         end
       end
     end
@@ -140,7 +140,7 @@ describe Plaid do
 
       context 'using incorrect PIN' do
         let(:pin) { '0000' }
-        it { expect { user }.to raise_error(Plaid::RequestFailed, 'invalid pin') }
+        it { expect { user }.to raise_error(OldPlaid::RequestFailed, 'invalid pin') }
       end
     end
 
@@ -171,43 +171,43 @@ describe Plaid do
   end
 
   describe '.set_user' do
-    subject { Plaid.set_user(access_token) }
+    subject { OldPlaid.set_user(access_token) }
     let(:access_token) { 'test' }
 
     it { expect(subject.access_token).to eq(access_token)}
 
     context 'gets a valid user with accounts and transactions' do
-      let(:user) { Plaid.set_user('test_wells',['connect']) }
+      let(:user) { OldPlaid.set_user('test_wells',['connect']) }
       it { expect(user.transactions).not_to be_empty }
     end
 
     context 'gets a valid user with accounts' do
-      let(:user) { Plaid.set_user('test_wells',['auth']) }
+      let(:user) { OldPlaid.set_user('test_wells',['auth']) }
       it { expect(user.accounts).not_to be_empty }
     end
 
     #TODO: Fully vet the info api endpoint for the beta functions before adding this as a supported function.
     pending 'need to vet the info api endpoint' do
       context 'gets a valid user with info' do
-        let(:user) { Plaid.set_user('test_wells',['info']) }
+        let(:user) { OldPlaid.set_user('test_wells',['info']) }
         it { expect(user.accounts).to be_truthy}
       end
 
       context 'gets a fully validated user with all access granted' do
-        let(:user) { Plaid.set_user('test_wells', ['connect', 'info', 'auth']) }
+        let(:user) { OldPlaid.set_user('test_wells', ['connect', 'info', 'auth']) }
         it { expect(user.transactions).to be_truthy}
       end
     end
   end
 
   describe '.exchange_token' do
-    subject { Plaid.exchange_token('test,chase,connected', 'QPO8Jo8vdDHMepg41PBwckXm4KdK1yUdmXOwK') }
+    subject { OldPlaid.exchange_token('test,chase,connected', 'QPO8Jo8vdDHMepg41PBwckXm4KdK1yUdmXOwK') }
 
     it { expect(subject.access_token).to eql('test_chase') }
   end
 
   describe '.transactions' do
-    subject { Plaid.transactions(access_token, options) }
+    subject { OldPlaid.transactions(access_token, options) }
     let(:access_token) { 'test_wells' }
     let(:options)      { nil }
 

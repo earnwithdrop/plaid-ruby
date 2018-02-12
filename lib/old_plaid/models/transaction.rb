@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class Transaction
     attr_accessor :id, :account, :date, :amount, :name, :meta, :location, :pending, :score, :cat, :type, :category, :category_id, :pending_transaction
 

@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class ExchangeTokenResponse
     attr_accessor :access_token
     attr_accessor :stripe_bank_account_token

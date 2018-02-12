@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class Account
     attr_accessor :available_balance, :current_balance, :limit, :institution_type, :meta, :transactions, :numbers, :name, :id, :type, :subtype
 

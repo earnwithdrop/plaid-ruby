@@ -1,7 +1,7 @@
-describe Plaid::Account do
+describe OldPlaid::Account do
   # API: semi-private
   describe '.new' do
-    subject { Plaid::Account.new(results) }
+    subject { OldPlaid::Account.new(results) }
 
     def self.with_results(_results, &examples)
       context "with results #{_results}" do

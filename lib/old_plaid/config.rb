@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   module Configure
     attr_accessor :customer_id, :secret, :environment_location
 

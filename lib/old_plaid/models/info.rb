@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class Information
     attr_accessor :names, :emails, :phone_numbers, :addresses
 

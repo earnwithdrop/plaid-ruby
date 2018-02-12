@@ -3,7 +3,7 @@ require_relative 'transaction'
 require_relative 'info'
 require 'json'
 
-module Plaid
+module OldPlaid
   class User
     attr_accessor :accounts, :transactions, :access_token, :type, :permissions, :api_res, :pending_mfa_questions, :info, :information
 

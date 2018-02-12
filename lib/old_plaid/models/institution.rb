@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class Institution
     attr_accessor :id, :name, :type, :has_mfa, :mfa, :credentials, :products, :url, :fields, :colors, :name_break, :logo
 

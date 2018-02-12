@@ -2,13 +2,13 @@ require 'net/http'
 require 'json'
 require 'uri'
 
-module Plaid
+module OldPlaid
   class Connection
     class << self
       # API: semi-private
       def post(path, options = {})
         uri = build_uri(path)
-        options.merge!(client_id: Plaid.customer_id, secret: Plaid.secret)
+        options.merge!(client_id: OldPlaid.customer_id, secret: OldPlaid.secret)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
         http.read_timeout = 240
@@ -41,7 +41,7 @@ module Plaid
       # API: semi-private
       def patch(path, options = {})
         uri = build_uri(path)
-        options.merge!(client_id: Plaid.customer_id, secret: Plaid.secret)
+        options.merge!(client_id: OldPlaid.customer_id, secret: OldPlaid.secret)
         req = Net::HTTP::Patch.new(uri.path)
         req.body = URI.encode_www_form(options) if options
         req.content_type = 'application/x-www-form-urlencoded'
@@ -52,7 +52,7 @@ module Plaid
       # API: semi-private
       def delete(path, options = {})
         uri = build_uri(path)
-        options.merge!(client_id: Plaid.customer_id, secret: Plaid.secret)
+        options.merge!(client_id: OldPlaid.customer_id, secret: OldPlaid.secret)
         req = Net::HTTP::Delete.new(uri.path)
         req.body = URI.encode_www_form(options) if options
         req.content_type = 'application/x-www-form-urlencoded'
@@ -64,29 +64,29 @@ module Plaid
       # API: semi-private
       def build_uri(path, option = nil)
         path = path + '/' + option unless option.nil?
-        URI.parse(Plaid.environment_location + path)
+        URI.parse(OldPlaid.environment_location + path)
       end
 
       private
 
       def parse_response(res)
         # unfortunately, the JSON gem will raise an exception if the response is empty
-        raise Plaid::ServerError.new(res.code, res.msg, '', res['X-Request-Id']) if res.body.to_s.length < 2
+        raise OldPlaid::ServerError.new(res.code, res.msg, '', res['X-Request-Id']) if res.body.to_s.length < 2
         # we got a response from the server, so parse it
         body = JSON.parse(res.body)
         case res.code.delete('.').to_i
         when 200 then body
         when 201 then { msg: 'Requires further authentication', body: body}
         when 400
-          raise Plaid::BadRequest.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::BadRequest.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 401
-          raise Plaid::Unauthorized.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::Unauthorized.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 402
-          raise Plaid::RequestFailed.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::RequestFailed.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         when 404
-          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         else
-          raise Plaid::ServerError.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::ServerError.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         end
       end
 
@@ -98,7 +98,7 @@ module Plaid
         when nil
           body
         when 1301, 1401, 1501, 1601
-          raise Plaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
+          raise OldPlaid::NotFound.new(body['code'], body['message'], body['resolve'], res['X-Request-Id'])
         else
           body
         end

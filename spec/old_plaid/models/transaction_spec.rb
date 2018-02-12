@@ -1,8 +1,8 @@
-describe Plaid::Transaction do
+describe OldPlaid::Transaction do
   # API: semi-private
   describe '.new' do
     # The reason this looks weird is because it is. This will be refactored for 2.0
-    subject { Plaid::Transaction.new(results) }
+    subject { OldPlaid::Transaction.new(results) }
 
     def self.with_results(_results, &examples)
       context "with results #{_results}" do

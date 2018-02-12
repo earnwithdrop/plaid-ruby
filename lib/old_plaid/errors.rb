@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class PlaidError < StandardError
     attr_reader :code
     attr_reader :resolve

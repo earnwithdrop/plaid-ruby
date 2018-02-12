@@ -1,4 +1,4 @@
-module Plaid
+module OldPlaid
   class Category
     attr_accessor :type, :hierarchy, :id
 

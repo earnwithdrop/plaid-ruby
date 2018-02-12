@@ -1,16 +1,16 @@
-require 'plaid/version'
-require 'plaid/config'
-require 'plaid/errors'
+require 'old_plaid/version'
+require 'old_plaid/config'
+require 'old_plaid/errors'
 
-require 'plaid/models/user'
-require 'plaid/models/institution'
-require 'plaid/models/category'
-require 'plaid/models/exchange_token_response'
+require 'old_plaid/models/user'
+require 'old_plaid/models/institution'
+require 'old_plaid/models/category'
+require 'old_plaid/models/exchange_token_response'
 
 require 'json'
 
-module Plaid
-  autoload :Connection, 'plaid/connection'
+module OldPlaid
+  autoload :Connection, 'old_plaid/connection'
 
   class << self
     # Configures the gem with the public, private, and environment vars
